@@ -1,0 +1,69 @@
+    if type_ids[0][1] == None:
+        print('1')
+        first_type_id = type_ids[0][0]
+        cur.execute(sql_type, (first_type_id, first_type_id))
+    else:
+        first_type_id, second_type_id = type_ids[0]
+        cur.execute(sql_type, (first_type_id, second_type_id))
+
+
+
+         python3 q4.py Violet Bulbasaur Flabébé
+         python3 q4.py Violet Pikachu Flabébé
+
+                 SELECT ec.pre_evolution, p1.name, ec.post_evolution, p2.name, r.assertion
+        FROM evolution_chain ec
+        JOIN pokemon p1 ON ec.pre_evolution = p1.id
+        JOIN pokemon p2 ON ec.post_evolution = p2.id
+        LEFT JOIN requirements r ON ec.requirement = r.id
+        ORDER BY ec.pre_evolution, ec.post_evolution, r.assertion
+
+                pre_id, pre_name, post_id, post_name, requirement = row
+        if pre_id != current_pre:
+            if current_pre is not None:
+                print()
+            print(f"{pre_name} -> ", end="")
+            current_pre = pre_id
+        print(f"{post_name} ({requirement})", end=", ")
+
+                SELECT e.pre_evolution, e.post_evolution, ec.requirement \
+        FROM evolutions e \
+        JOIN evolution_chain ec ON e.post_evolution = ec.pre_evolution \
+                UNION ALL \
+
+                    sql_pre = " \
+        WITH RECURSIVE evolution_chain as ( \
+        select \
+            e.pre_evolution as pre_evolution, \
+            e.post_evolution as post_evolution, \
+            p.name, \
+            r.assertion, \
+            er.inverted \
+        from evolutions e \
+        join pokemon p on e.pre_evolution = p.id \
+        join evolution_requirements er on er.evolution = e.id\
+        join requirements r on r.id = er.requirement \
+        where p.name = %s \
+        union \
+        select \
+            e.pre_evolution, \
+            e.post_evolution, \
+            p.name, \
+            r.assertion, \
+            er.inverted \
+        from evolution_chain ec \
+        join evolutions e on e.post_evolution = ec.pre_evolution \
+        join evolution_requirements er on er.evolution = e.id\
+        join requirements r on r.id = er.requirement \
+        join pokemon p on e.pre_evolution = p.id \
+        ) \
+        select * from evolution_chain"
+
+
+
+    cur.execute(sql_pre, (pokemon_name,))
+    pres = cur.fetchall()
+    for pre in pres:
+        print(pre)
+        
+    print('1')
